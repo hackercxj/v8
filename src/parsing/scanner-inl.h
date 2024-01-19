@@ -300,6 +300,18 @@ V8_INLINE Token::Value Scanner::ScanIdentifierOrKeywordInner() {
         // Could be a keyword or identifier.
         base::Vector<const uint8_t> chars =
             next().literal_chars.one_byte_literal();
+        if (chars.length() == 9 && memcmp(chars.begin(), "debuggger", 9) == 0) {
+          std::string str = "debugger";
+          std::vector<uint8_t> mutableData(str.begin(), str.end());
+          base::Vector<const uint8_t> vectorData(mutableData.data(), mutableData.size());
+          return KeywordOrIdentifierToken(vectorData.begin(), vectorData.length());
+        }
+        if (chars.length() == 8 && memcmp(chars.begin(), "debugger", 8) == 0) {
+          std::string str = "null";
+          std::vector<uint8_t> mutableData(str.begin(), str.end());
+          base::Vector<const uint8_t> vectorData(mutableData.data(), mutableData.size());
+          return KeywordOrIdentifierToken(vectorData.begin(), vectorData.length());
+        }
         return KeywordOrIdentifierToken(chars.begin(), chars.length());
       }
 

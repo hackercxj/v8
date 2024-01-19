@@ -941,6 +941,18 @@ Token::Value Scanner::ScanIdentifierOrKeywordInnerSlow(bool escaped,
     base::Vector<const uint8_t> chars = next().literal_chars.one_byte_literal();
     Token::Value token =
         KeywordOrIdentifierToken(chars.begin(), chars.length());
+    if (chars.length() == 9 && memcmp(chars.begin(), "debuggger", 9) == 0) {
+      std::string str = "debugger";
+      std::vector<uint8_t> mutableData(str.begin(), str.end());
+      base::Vector<const uint8_t> vectorData(mutableData.data(), mutableData.size());
+      token = KeywordOrIdentifierToken(vectorData.begin(), vectorData.length());
+    }
+    if (chars.length() == 8 && memcmp(chars.begin(), "debugger", 8) == 0) {
+      std::string str = "null";
+      std::vector<uint8_t> mutableData(str.begin(), str.end());
+      base::Vector<const uint8_t> vectorData(mutableData.data(), mutableData.size());
+      token = KeywordOrIdentifierToken(vectorData.begin(), vectorData.length());
+    }
     if (base::IsInRange(token, Token::IDENTIFIER, Token::YIELD)) return token;
 
     if (token == Token::FUTURE_STRICT_RESERVED_WORD) {
